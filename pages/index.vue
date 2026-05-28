@@ -1,9 +1,14 @@
 <script lang="ts" setup>
-import ParentComponent from "~/components/ParentComponent.vue";
+import UserFormComponent from "~/components/UserFormComponent.vue";
+
+useSeoMeta({
+  title: "Form Generator",
+  description: "Тестовое задание для Artlebedev",
+});
 </script>
 
 <template>
-  <ParentComponent />
+  <UserFormComponent />
 </template>
 
 <style scoped></style>
