@@ -5,12 +5,19 @@ import type { FormSchema } from "~/types/form";
 const props = defineProps<{ schema: FormSchema }>();
 const emit = defineEmits(["submit"]);
 
-
 const formData = defineModel<Record<string, any>>({ required: true });
-const { errors, validateField, validateForm } = useFormValidator();
+
+const { errors, validateField, validateForm, clearErrors } = useFormValidator();
+
 const onInput = (field: any, value: any) => {
   formData.value[field.model] = value;
-  errors.value[field.model] = validateField(field, value);
+
+  const error = validateField(field, value);
+  if (error) {
+    errors.value[field.model] = error;
+  } else {
+    clearErrors(field.model);
+  }
 };
 
 const onSubmit = () => {
@@ -23,8 +30,9 @@ const onSubmit = () => {
 <template>
   <form @submit.prevent="onSubmit" class="form-generator">
     <div class="form-title"><h1>Заполните форму</h1></div>
+
     <div v-for="field in schema.fields" :key="field.model" class="field">
-      <!-- Текстовые инпуты -->
+      <!-- Текстовые поля (text, email, password) -->
       <input
         v-if="['text', 'email', 'password'].includes(field.type)"
         :type="field.type"
@@ -35,7 +43,7 @@ const onSubmit = () => {
         class="input"
       />
 
-      <!-- Селект -->
+      <!-- Выпадающий список -->
       <select
         v-else-if="field.type === 'select'"
         :value="formData[field.model]"
@@ -60,10 +68,12 @@ const onSubmit = () => {
             @change="onInput(field, ($event.target as HTMLInputElement).checked)"
           />
           <span class="checkbox__checkmark"></span>
+
           <span class="checkbox__text" v-if="!errors[field.model]">
             {{ field.label + " и соглашаюсь с " }}
             <NuxtLink to="/terms" class="checkbox__terms-link">условиями пользования</NuxtLink>
           </span>
+
           <span class="checkbox__error" v-else>
             {{ errors[field.model] }}
           </span>
@@ -139,7 +149,7 @@ const onSubmit = () => {
     display: inline-flex;
     align-items: center;
     margin-bottom: 8px;
-    height: 26dapx;
+    height: 26px;
     font-size: var(--font-size-small);
     cursor: pointer;
 
@@ -206,6 +216,10 @@ const onSubmit = () => {
     &:active {
       background-color: #7f900b;
     }
+  }
+
+  .is-active {
+    background-color: var(--error-color);
   }
 }
 </style>

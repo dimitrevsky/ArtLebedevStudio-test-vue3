@@ -34,6 +34,13 @@ body {
   }
 }
 
+.swal-container {
+  border: 1px solid var(--accent-color);
+  background-color: var(--secondary-surface-color);
+  font-family: "Ubuntu", sans-serif;
+  color: var(--supporting-color);
+}
+
 :root {
   --font-size-title: 32px;
   --font-size-title-small: 24px;

@@ -1,42 +1,73 @@
 import type { FormFieldSchema, FormSchema } from "~/types/form";
 
-// логика моей валидации. Хук
+const VALIDATORS = {
+  required: (value: any) => {
+    if (value === undefined || value === null || value === "") return "Обязательное поле";
+
+    if (typeof value === "boolean" && !value) return "Нужно согласиться :D";
+    return "";
+  },
+
+  minLength: (value: any, length: number) => {
+    if (!value && value !== 0) return "";
+    return String(value).length >= length ? "" : `Минимальная длина ${length} символов`;
+  },
+
+  pattern: (value: any, pattern: string) => {
+    if (!value && value !== 0) return "";
+    return new RegExp(pattern).test(String(value)) ? "" : "Не тот формат";
+  },
+};
+
 export const useFormValidator = () => {
   const errors = ref<Record<string, string>>({});
 
-  const validateField = (field: FormFieldSchema, value: any) => {
-    if (field.required && (!value || value === "")) {
-      return "Обязательное поле";
+  const validateField = (field: FormFieldSchema, value: any): string => {
+    if (field.required) {
+      const error = VALIDATORS.required(value);
+      if (error) return error;
     }
 
-    if (field.minLength && String(value).length < field.minLength) {
-      return `Минимальная длина ${field.minLength} символов`;
+    if (field.minLength) {
+      const error = VALIDATORS.minLength(value, field.minLength);
+      if (error) return error;
     }
 
-    if (field.pattern && !new RegExp(field.pattern).test(value)) {
-      return "Не тот формат";
+    if (field.pattern) {
+      const error = VALIDATORS.pattern(value, field.pattern);
+      if (error) return error;
     }
 
     return "";
   };
 
-  const validateForm = (schema: FormSchema, data: Record<string, any>) => {
-    let isValid = true;
+  const validateForm = (schema: FormSchema, data: Record<string, any>): boolean => {
+    const newErrors: Record<string, string> = {};
+
     schema.fields.forEach((field) => {
       const error = validateField(field, data[field.model]);
       if (error) {
-        errors.value[field.model] = error;
-        isValid = false;
-      } else {
-        delete errors.value[field.model];
+        newErrors[field.model] = error;
       }
     });
-    return isValid;
+
+    errors.value = newErrors;
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const clearErrors = (model: string) => {
+    if (errors.value[model]) {
+      const newErrors = { ...errors.value };
+      delete newErrors[model];
+      errors.value = newErrors;
+    }
   };
 
   return {
     errors,
     validateField,
     validateForm,
+    clearErrors,
   };
 };

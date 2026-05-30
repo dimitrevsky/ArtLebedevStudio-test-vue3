@@ -12,6 +12,8 @@ const formSchema: FormSchema = {
   ],
 };
 
+const { $swal } = useNuxtApp();
+
 const data = ref({
   name: "",
   email: "",
@@ -22,14 +24,27 @@ const data = ref({
 
 const handleSuccsess = (finalData: any) => {
   console.log("Готово к отправке:", finalData);
-  alert("Форма успешно отправлена смотри консоль");
+  $swal.fire({
+    position: "bottom-end",
+    title: "Все окей!",
+    text: "Форма успешно отправлена",
+    theme: "dark",
+    showConfirmButton: false,
+    timer: 2000,
+    backdrop: "transparent",
+    customClass: {
+      popup: "swal-container",
+    },
+  });
 };
 </script>
 
 <template>
-  <div class="form-container">
+  <section class="form-container">
     <FormGenerator :schema="formSchema" v-model="data" @submit="handleSuccsess" />
-  </div>
-</template>
+  </section>
 
-<style scoped></style>
+  <section>
+    <DebuggingComponent :schema="formSchema" :data="data" />
+  </section>
+</template>

@@ -10,5 +10,3 @@ useSeoMeta({
 <template>
   <UserFormComponent />
 </template>
-
-<style scoped></style>

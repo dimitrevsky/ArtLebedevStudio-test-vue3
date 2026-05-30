@@ -4,7 +4,7 @@ useSeoMeta({
   description: "Описание реализации динамического генератора форм на Nuxt 3",
 });
 
-const stacks = ["Nuxt 3", "Vue 3", "TypeScript", "Composition API"];
+const stacks = ["Nuxt 3", "TypeScript", "Composition API", "SweatAlert2"];
 </script>
 
 <template>
