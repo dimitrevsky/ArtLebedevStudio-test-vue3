@@ -7,12 +7,8 @@ const props = defineProps<{
 }>();
 
 const formatValue = (field: any, value: any) => {
-  if (field.type === "password" && value) {
-    return "•".repeat(value.length);
-  }
-
   if (value === undefined || value === null || value === "") {
-    return "Не указан(-о)";
+    return "Не указан(-а)";
   }
 
   return value;
@@ -20,10 +16,10 @@ const formatValue = (field: any, value: any) => {
 
 const formatLabel = (field: any) => {
   if (field.type === "checkbox") {
-    return "Согласие"
+    return "Согласие";
   }
 
-  return field.label
+  return field.label;
 };
 </script>
 

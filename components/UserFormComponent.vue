@@ -28,7 +28,6 @@ const handleSuccsess = (finalData: any) => {
     position: "bottom-end",
     title: "Все окей!",
     text: "Форма успешно отправлена",
-    theme: "dark",
     showConfirmButton: false,
     timer: 2000,
     backdrop: "transparent",

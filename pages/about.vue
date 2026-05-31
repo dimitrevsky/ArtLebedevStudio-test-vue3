@@ -5,6 +5,15 @@ useSeoMeta({
 });
 
 const stacks = ["Nuxt 3", "TypeScript", "Composition API", "SweatAlert2"];
+const results = [
+  "Динамическая генерация полей формы",
+  "Поддержка text / email / password",
+  "Поддержка select и checkbox",
+  "Реактивное обновление данных через v-model",
+  "Валидация required / minLength / patter",
+  "Компонентая архетектура",
+  "TypeScript типизация",
+];
 </script>
 
 <template>
@@ -13,7 +22,7 @@ const stacks = ["Nuxt 3", "TypeScript", "Composition API", "SweatAlert2"];
       <h1 class="about__title">О проекте</h1>
 
       <p class="about__text">
-        Это тестовое задание для студии Артемия Лебедева, реализованное на Nuxt 3 и Vue 3 Composition API.
+        Это тестовое задание для студии Артемия Лебедева, реализованное на Nuxt3 - setup + CompositionAPI.
       </p>
 
       <p class="about__text">
@@ -22,15 +31,11 @@ const stacks = ["Nuxt 3", "TypeScript", "Composition API", "SweatAlert2"];
 
       <h2 class="about__subtitle">Чо сделал</h2>
 
-      <ul class="about__list">
-        <li>Динамическая генерация полей формы</li>
-        <li>Поддержка text / email / password</li>
-        <li>Поддержка select и checkbox</li>
-        <li>Реактивное обновление данных через v-model</li>
-        <li>Валидация required / minLength / pattern</li>
-        <li>Компонентная архитектура</li>
-        <li>TypeScript типизация</li>
-      </ul>
+      <p class="about__list">
+        <span class="about__list--item" v-for="result in results">
+          {{ result }}
+        </span>
+      </p>
 
       <h2 class="about__subtitle">Технологии</h2>
 
@@ -46,46 +51,53 @@ const stacks = ["Nuxt 3", "TypeScript", "Composition API", "SweatAlert2"];
   display: flex;
   justify-content: center;
   padding: 40px 20px;
-}
 
-.about__content {
-  width: min(800px, 100%);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-top: 30px;
-}
+  .about__content {
+    width: min(800px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
 
-.about__title {
-  font-size: var(--font-size-title);
-}
+    .about__title {
+      font-size: var(--font-size-title);
+    }
 
-.about__subtitle {
-  margin-top: 12px;
-  font-size: var(--font-size-title-small);
-}
+    .about__subtitle {
+      margin-top: 12px;
+      font-size: var(--font-size-title-small);
+    }
 
-.about__text {
-  line-height: 1.6;
-  font-size: var(--font-size-text);
-}
+    .about__text {
+      line-height: 1.6;
+      font-size: var(--font-size-text);
+    }
 
-.about__list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-left: 20px;
-}
+    .about__list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-left: 20px;
 
-.about__stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
+      .about__list--item {
+        &::before {
+          content: "●";
+          margin-right: 7px;
+          color: var(--accent-color);
+        }
+      }
+    }
 
-.about__stack-item {
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--accent-color);
+    .about__stack {
+      display: flex;
+      gap: 12px;
+
+      .about__stack-item {
+        padding: 8px 14px;
+        border-radius: 22px;
+        border: 1px solid var(--accent-color);
+      }
+    }
+  }
 }
 </style>

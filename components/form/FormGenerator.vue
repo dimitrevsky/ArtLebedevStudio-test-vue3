@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import { useFormValidator } from "~/composables/useFormValidator";
+// import { useFormValidator } from "~/composables/useFormValidator";
 import type { FormSchema } from "~/types/form";
 
 const props = defineProps<{ schema: FormSchema }>();
 const emit = defineEmits(["submit"]);
 
 const formData = defineModel<Record<string, any>>({ required: true });
+const localData = ref({ ...formData.value });
 
 const { errors, validateField, validateForm, clearErrors } = useFormValidator();
 
-const onInput = (field: any, value: any) => {
-  formData.value[field.model] = value;
+function onInput(field: any, value: any) {
+  localData.value[field.model] = value;
 
   const error = validateField(field, value);
   if (error) {
@@ -18,13 +19,15 @@ const onInput = (field: any, value: any) => {
   } else {
     clearErrors(field.model);
   }
-};
+}
 
-const onSubmit = () => {
-  if (validateForm(props.schema, formData.value)) {
+function onSubmit() {
+  if (validateForm(props.schema, localData.value)) {
+    formData.value = { ...localData.value };
     emit("submit", formData.value);
+    localData.value = { text: "", email: "", password: "", select: "", checkbox: false };
   }
-};
+}
 </script>
 
 <template>
@@ -36,7 +39,7 @@ const onSubmit = () => {
       <input
         v-if="['text', 'email', 'password'].includes(field.type)"
         :type="field.type"
-        :value="formData[field.model]"
+        :value="localData[field.model]"
         :placeholder="errors[field.model] || field.label"
         @input="onInput(field, ($event.target as HTMLInputElement).value)"
         :class="{ 'error-active': errors[field.model] }"
@@ -46,7 +49,7 @@ const onSubmit = () => {
       <!-- Выпадающий список -->
       <select
         v-else-if="field.type === 'select'"
-        :value="formData[field.model]"
+        :value="localData[field.model]"
         @change="onInput(field, ($event.target as HTMLSelectElement).value)"
         :class="{ 'error-active': errors[field.model] }"
         class="select"
@@ -64,7 +67,7 @@ const onSubmit = () => {
             class="checkbox-hidden"
             type="checkbox"
             :id="field.model"
-            :checked="formData[field.model]"
+            :checked="localData[field.model]"
             @change="onInput(field, ($event.target as HTMLInputElement).checked)"
           />
           <span class="checkbox__checkmark"></span>
@@ -90,7 +93,7 @@ const onSubmit = () => {
   display: flex;
   background-color: var(--secondary-surface-color);
   margin: auto;
-  margin-top: 200px;
+  margin-top: calc(2vw + 60px);
   flex-flow: column;
   width: min(400px, 95%);
   border: 3px solid var(--accent-color);

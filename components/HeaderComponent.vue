@@ -83,7 +83,7 @@
     }
 
     &:hover {
-      color:#000;
+      color: #000;
     }
 
     .nav__item--active {
@@ -99,6 +99,17 @@
         transition: height 0.1s ease-out;
       }
     }
+  }
+}
+
+@media (max-width: 1100px) {
+  .header__logo {
+    display: none;
+  }
+
+  .header {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
